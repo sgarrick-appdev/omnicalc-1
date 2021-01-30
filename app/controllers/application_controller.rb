@@ -42,9 +42,12 @@ end
 
 def calculate_payment
   @APR = params.fetch("APR").to_f
-  @n = params.fetch("n").to_i
-  @principal = params.fetch("principal").to_f.round(2)
-  @payment = ((@APR/100)/365)*@n*12*@principal
+  @years = params.fetch("years").to_i
+  @principal = params.fetch("principal").to_f
+  @APRpern = (@APR/100)/12
+  @top = @APRpern*@principal
+  @bottom = 1-((1+@APRpern)**(-@years*12))
+  @payment = @top/@bottom
   render({:template => "calculation_template/payment_results.html.erb"})
 end
 
